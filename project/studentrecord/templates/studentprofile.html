@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    <link href="/static/css/tablestyles.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    Student Profile
+{% endblock %}
+
+{% block main %}
+    <table>
+        <tr>
+            <td colspan="2" rowspan="2">
+                {% if imgfile %}
+                    <img src="{{ url_for('static', filename=imgfile) }}" class="rounded" width="150" height="150">
+                {% endif %}
+            </td>
+            <th>Registration Number:</th>
+            <td style="width:24%">{{ studentdocument["reg_num"] }}</td>
+            <th>Surname:</th>
+            <td style="width:24%">{{ studentdocument["surname"] }}</td>
+        </tr>
+        <tr>
+            <th>Othername:</th>
+            <td>{{ studentdocument["othername"] }}</td>
+            <th>Admission Date:</th>
+            <td>{{ studentdocument["admsn_date"] }}</td>
+        </tr>
+        <tr>
+            <th>Entry Class:</th>
+            <td style="width:8%">{{ entryclass["class_name"] }}</td>
+            <th>Current Class:</th>
+            <td>{{ currentclass["class_name"] }}</td>
+            <th>Date of Birth:</th>
+            <td>{{ studentdocument["date_of_birth"] }}</td>
+        </tr>
+        <tr>
+            <th>Gender:</th>
+            <td>{{ studentdocument["gender"] }}</td>
+            <th>Nationality:</th>
+            <td>{{ studentdocument["nationality"] }}</td>
+            <th>State of Origin:</th>
+            <td>{{ studentdocument["states"] }}</td>
+        </tr>
+        <tr>
+            <th>Religion:</th>
+            <td>{{ studentdocument["religion"] }}</td>
+            <th>Guardian Name:</th>
+            <td>{{ guardian["g_name"] }}</td>
+            <th>Guardian Phone:</th>
+            <td>{{ guardian["g_phone"] }}</td>
+        </tr>
+        <tr>
+            <th>Guardian Adress:</th>
+            <td colspan="3">{{ guardian["g_address"] }}</td>
+            <th>Guardian Email:</th>
+            <td>{{ guardian["g_email"] }}</td>
+        </tr>
+        <tr>
+            <th>Studentship Status:</th>
+            <td>{{ studentdocument["class_status"] }}</td>
+            <th>Date of Tranfer/Graduation:</th>
+            <td>{{ studentdocument["trans_grad_date"] }}</td>
+            <th>&nbsp;</th>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+{% endblock %}
+
+
+

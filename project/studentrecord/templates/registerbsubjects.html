@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block style %}
+	<link href="/static/css/studentreg.css" rel="stylesheet">
+	<link href="/static/css/tablestyles.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    Register Subject
+{% endblock %}
+
+{% block main %}
+    {% if url == "offer_bsubjects" %}
+        <form action="{{ url }}" method="post" id="">
+            <div class="col-md-6 slelct_relative">
+                <div>
+                    <!-- <label class="">Class<span class="required">*</label> -->
+                    <select class="form-control" name="classid_subjtname">
+                        <option value="" selected disabled>Select Class</option>
+                        {% for asigned_class_subject in asigned_class_subjects %}
+                                <option value="{{ asigned_class_subject['class_id'] }},{{ asigned_class_subject['subject_name'] }}">{{ asigned_class_subject['subject_name'] }}-{{ asigned_class_subject['class_name'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-primary" type="submit" class="relative">View</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <form action="{{ url }}" class="" method="post"  id="">
+            <table class="regsubjects">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ student["reg_num"] }}</td>
+                            <td>{{ student["othername"] +" "+  student["surname"] }}</td>
+
+                            {% if student['reg_num'] in registeredstudentids %}
+                                <td class="registered">registered</td>
+                            {% else %}
+                                <td><input name="reg_num" type="checkbox" value="{{ student['reg_num'] }}" id="reg_num"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td rowspan="2"><button class="btn btn-primary" type="submit">Submit</button></td>
+                        </tr>
+                </tbody>
+            </table>
+            <!-- send to register_bsubjects route -->
+            <input name="class_id" type="text" value="{{ class_id }}" id="class_id" style="visibility: hidden;">
+            <input name="subject_name" type="text" value="{{ subject_name }}" id="subject_name" style="visibility: hidden;">
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}

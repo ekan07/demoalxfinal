@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Student Details
+{% endblock %}
+
+{% block main %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="/static/css/studentreg.css" rel="stylesheet">
+	</head>
+	<body>
+		<!-- overflow-hidden -->
+		<div class="container main-block">
+			<form class="needs-validation" action="/studentdetails" method="post">
+				<fieldset>
+					<legend>
+						<h3>Class Details</h3>
+					</legend>
+					<div  class="personal-details">
+						<div class="col-md-6">
+                            <div >
+                                <label>Class Name<span class="required">*</label>
+                                <select class="form-control" name="classname">
+									<option value="" selected disabled>Select</option>
+									{% for classname in classnames %}
+										<option value="{{ classname['class_name'] }}">{{ classname['class_name'] }}</option>
+									{% endfor %}
+                                </select>
+                            </div>
+                            <div >
+                                <label>Session<span class="required">*</label>
+                                <select class="form-control" name="sch_session">
+									<option value="" selected disabled>Select</option>
+									<option value="{{ schoolsession }}">{{ schoolsession }}</option>
+                                </select>
+                            </div>
+						</div>
+						<div class="col-md-6">
+							<div><label>Admission Date<span class="required">*</span></label><input class="form-control" autocomplete="off" type="date" name="admsn_date" required></div>
+						</div>
+					</div>
+				</fieldset>
+				<hr>
+				<fieldset>
+					<legend>
+						<h3>Student Details</h3>
+					</legend>
+					<div  class="personal-details">
+						<div class="col-md-6">
+							<div>
+								<!--  for="validationCustom01" -->
+								<label>Surname<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" autofocus type="text" name="surname"required>
+							</div>
+							<div>
+								<label>Othername<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="text" name="othername" required>
+							</div>
+							<div><label>Email<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="email" pattern=".+@gmail\.com" placeholder="username@gmail.com" name="st_email" required>
+							</div>
+							<div><label>Date of Birth<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="date" name="date_of_birth" required>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div>
+								<label>Gender<span class="required">*</span></label>
+								<div class="gender">
+									<!--  class="form-select" -->
+									<label for="male" class="radio">Male</label>
+									<input type="radio" value="male" id="male" name="gender" required/>
+									<label for="female" class="radio">Female</label>
+									<input type="radio" value="female" id="female" name="gender" required/>
+								</div>
+							</div>
+							<div><label>religion<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="text" name="religion" required>
+
+							</div>
+							<div><label>L.G.A.<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="text" name="lga" required>
+							</div>
+							<div><label>State<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="text" name="state" required>
+							</div>
+							<div><label>Nationality<span class="required">*</span></label>
+								<input class="form-control" autocomplete="off" type="text" name="nationality" required>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<div class="col-12">
+					<button class="btn btn-primary" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>
+{% endblock %}

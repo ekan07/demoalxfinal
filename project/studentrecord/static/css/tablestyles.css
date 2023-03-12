@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.slelct_relative {
+    position: relative;
+    right: 40px;
+  }
+
+.btn_relative {
+    position: relative;
+    right: 35px;
+  }
+
+th, td {
+    padding: 8px;
+    /* text-align: left; */
+}
+
+.clstudenttable {
+    width: 80%;
+}
+.classtable {
+    width: 40%;
+}
+
+.clnorecord {
+    border-style: outset;
+    background: lightgray;
+    color: red;
+}
+
+.registered {
+    color: green;
+}
+
+

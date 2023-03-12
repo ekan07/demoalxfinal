@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Class Details
+{% endblock %}
+
+{% block main %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="/static/css/studentreg.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="main-block">
+			<form action="{{ url_for('asign_classteacher') }}" method="post">
+				<fieldset>
+					<legend>
+						<h3>Asign Class Teacher</h3>
+					</legend>
+					<hr>
+					<div  class="personal-details">
+						<div class="col-md-12">
+                            <div >
+                                <label>Class Name<span class="required">*</label>
+                                <select class="form-control" name="classname">
+									<option value="" selected disabled>Select</option>
+									{% for classname in classnames %}
+										<option value="{{ classname }}">{{ classname }}</option>
+									{% endfor %}
+                                </select>
+                            </div>
+						</div>
+					</div>
+				</fieldset>
+				<div class="col-12">
+					<button class="btn btn-primary" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>
+{% endblock %}

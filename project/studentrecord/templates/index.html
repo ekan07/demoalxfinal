@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    <link href="/static/css/tablestyles.css" rel="stylesheet">
+    <link href="/static/css/studentreg.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    View Students
+{% endblock %}
+
+{% block main %}
+    <table class="classtable">
+        <thead>
+            <tr>
+                <th>S/No</th>
+                <th>Class</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if classes == [] %}
+                <tr>
+                    <td class="clnorecord" colspan="3">No record found</td>
+                </tr>
+            {% else %}
+                {% for class in classes %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ class["class_name"] }}</td>
+                        <td><a href="{{ url_for('classStudents', class_id=class['id']) }}">View Students</a></td>
+                        <td><a href="{{ url_for('download_csv', class_id=class['id']) }}">Download List</a></td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

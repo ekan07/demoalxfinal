@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Upload Image
+{% endblock %}
+
+{% block main %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/css/studentreg.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="main-block">
+            <form action="{{ url_for('uploadimg', reg_num=reg_num) }}" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    <legend>
+                        <h3>Image Details</h3>
+                    </legend>
+                    <hr>
+                    <div class="personal-details">
+                        <div class="col-md-12">
+                            <div><label>Upload Image<span class="required">*</span></label><input type="file" name="image" id="image" oninput="filesize(this)" onchange="Filevalidation()"></div>
+                            <span id="size"></span>
+                            <p><strong>Limit: 2 to 4MB</strong></p>
+                        </div >
+                    </div>
+                </fieldset>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // Create a JavaScript function that saves the filesize as a cookie
+        function filesize(element){
+        document.cookie = `filesize=${element.files[0].size}`
+
+        }
+
+        Filevalidation = () => {
+            // https://www.geeksforgeeks.org/validation-of-file-size-while-uploading-using-javascript-jquery/
+            const img_file = document.getElementById('image');
+            // Check if any file is selected.
+            if (img_file.files.length > 0) {
+                for (const i = 0; i <= img_file.files.length - 1; i++) {
+                    const fsize = img_file.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 2048) {
+                        alert(
+                            `File size ${file} KB, please select a file less than 2mb`);
+                            // "File size <b>" + file + " KB</b>," + " please select a file less than 4mb");
+                    // } else if (file < 2048) {
+                    //     alert(
+                    //         `File size ${file} KB, please select a file greater than 2mb`);
+                    } else {
+                        document.getElementById('size').innerHTML = '<b>'
+                        + file + ' KB</b>';
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

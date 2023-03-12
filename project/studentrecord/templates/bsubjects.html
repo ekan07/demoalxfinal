@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Asign Class Subject
+{% endblock %}
+
+{% block main %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="/static/css/studentreg.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="main-block">
+			<form action="{{ url_for('bsubject') }}" method="post">
+				<fieldset>
+					<legend>
+						<h3>Asign Subject</h3>
+					</legend>
+					<hr>
+					<div  class="personal-details">
+						<div class="col-md-12">
+                            <div >
+                                <label>Subjects<span class="required">*</label>
+                                <select class="form-control" name="subjectcode">
+									<option value="" selected disabled>Select</option>
+									{% for subjtcodename, subjtname in subjects.items() %}
+										<option value="{{ subjtcodename }}">{{ subjtname }}</option>
+									{% endfor %}
+                                </select>
+                            </div>
+						</div>
+						<div class="col-md-12">
+                            <div >
+                                <label>Class Name<span class="required">*</label>
+                                <select class="form-control" name="classname">
+									<option value="" selected disabled>Select</option>
+									{% for asignedclass in asignedclasses %}
+										<option value="{{ asignedclass }}">{{ asignedclass }}</option>
+									{% endfor %}
+                                </select>
+                            </div>
+						</div>
+					</div>
+				</fieldset>
+				<div class="col-12">
+					<button class="btn btn-primary" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+	</body>
+	</html>
+{% endblock %}

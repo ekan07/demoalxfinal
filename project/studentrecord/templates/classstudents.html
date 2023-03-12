@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    <link href="/static/css/tablestyles.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    View Students
+{% endblock %}
+
+{% block main %}
+    <table class="clstudenttable">
+        <thead>
+            <tr>
+                <th>S/No</th>
+                <th>Student Reg No</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ student["reg_num"] }}</td>
+                    <td>{{ student["othername"] + " " +  student["surname"] }}</td>
+                    <td>{{ student["gender"] }}</td>
+                    <td><a href='{{ url_for("studentprofile", student_regnum=student["reg_num"]) }}'>View Details</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form action="" method="post">
+        <input name="students" type="text" value="{{ students }}" id="subject_name" style="visibility: hidden;">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+{% endblock %}
