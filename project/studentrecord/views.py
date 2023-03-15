@@ -84,15 +84,15 @@ def download_csv(class_id):
     if len(students) == 0:
         return e_message("Not authorized", 404)
 
-    classRow = db.execute("SELECT class_name FROM classes WHERE id = :id", id=class_id)[0]
+    classRow = db.execute(
+        "SELECT class_name FROM classes WHERE id = :id", id=class_id)[0]
     # field names
     fields = ['admission_number', 'surname', 'othername', 'gender']
     # name for csv file to be created
     filename = classRow["class_name"] + ".csv"
     # writing to csv file
-    # with open("studentrecord/static/client/csv/" + filename, 'w', encoding="utf-8") as csvfile:
-    # ALX Project
-    with open(Path("studentrecord", "static", "client", "csv", filename), 'w', encoding="utf-8") as csvfile:
+    csv_path = Path("studentrecord", "static", "client", "csv")
+    with open(Path(csv_path, filename), 'w', encoding="utf-8") as csvfile:
         # creating a csv dict writer object
         writer = csv.DictWriter(csvfile, fieldnames=fields)
         # writing headers (field names)
@@ -100,7 +100,7 @@ def download_csv(class_id):
         # writing data rows
         writer.writerows(students)
     # Download the csv file
-    return send_from_directory(app.config["CLIENT_CSV"], filename, as_attachment=True)
+    return send_from_directory(app.config["CLIENT_CSV"], Path(csv_path, filename), as_attachment=True)
 
 
 @app.route("/<int:class_id>", methods=["GET", "POST"])
@@ -126,7 +126,8 @@ def studentprofile(student_regnum):
                                  reg_num=student_regnum)
     if len(studentDocument) == 0:
         return e_message("Invalid url link", 404)
-    image = db.execute("SELECT * FROM images WHERE regnum_id = :regnum_id", regnum_id=student_regnum)
+    image = db.execute(
+        "SELECT * FROM images WHERE regnum_id = :regnum_id", regnum_id=student_regnum)
     # Use default image if no uploaded picture
     if len(image) == 0:
         if studentDocument[0]['gender'].lower() == 'female':
@@ -139,14 +140,18 @@ def studentprofile(student_regnum):
         # Split the extension from the filename
         img_exsn = image[0]["mimetype"].rsplit("/", 1)[1]
         # Image storage path
-        imgFilePath = "img/uploads/basic/" + str(image[0]["regnum_id"]) + "." + img_exsn
+        imgFilePath = "img/uploads/basic/" + \
+            str(image[0]["regnum_id"]) + "." + img_exsn
         # Write image to storage path
         with open("studentrecord/static/" + imgFilePath, "wb") as file:
             file.write(image[0]["image"])
 
-    entryClass = db.execute("SELECT class_name FROM classes WHERE id = :id", id=studentDocument[0]["entryclass_id"])[0]
-    currentClass = db.execute("SELECT class_name FROM classes WHERE id = :id", id=studentDocument[0]["currentclass_id"])[0]
-    guardian = db.execute("SELECT * FROM guardians WHERE regnum_id = :regnum_id", regnum_id=student_regnum)[0]
+    entryClass = db.execute("SELECT class_name FROM classes WHERE id = :id",
+                            id=studentDocument[0]["entryclass_id"])[0]
+    currentClass = db.execute("SELECT class_name FROM classes WHERE id = :id",
+                              id=studentDocument[0]["currentclass_id"])[0]
+    guardian = db.execute(
+        "SELECT * FROM guardians WHERE regnum_id = :regnum_id", regnum_id=student_regnum)[0]
     return render_template("/studentprofile.html", imgfile=imgFilePath, studentdocument=studentDocument[0], entryclass=entryClass,
                            currentclass=currentClass, guardian=guardian)
 
@@ -177,7 +182,8 @@ def asign_classteacher():
 
         classID = int(asign_classcode(className))
         # Ensure class exist and teacher is not asign to a particular class more than once:
-        classRow = db.execute("SELECT * FROM classes WHERE class_name = :class_name", class_name=className)
+        classRow = db.execute(
+            "SELECT * FROM classes WHERE class_name = :class_name", class_name=className)
         if len(classRow) != 0:
             teacherRows = db.execute("SELECT * FROM teachers WHERE class_id = :class_id AND userid = :userid",
                                      class_id=classRow[0]["id"], userid=session['user_id'])
@@ -257,12 +263,14 @@ def bsubject():
                 subjectRow = db.execute("SELECT * FROM b_subjects WHERE subject_name = :subject_name AND class_id = :class_id LIMIT 1",
                                         subject_name=SUBJECTS[subjectCode], class_id=classRow["id"])
                 if len(subjectRow) == 1:
-                    flash(f"{SUBJECTS[subjectCode]} subject already asigned to {className}", "danger")
+                    flash(
+                        f"{SUBJECTS[subjectCode]} subject already asigned to {className}", "danger")
                     return redirect("/bsubjects")
                 # Else asign subject to a class
                 db.execute("INSERT INTO b_subjects (subject_name, subject_code, teacher_id, class_id) VALUES(:subject_name, :subject_code, :teacher_id, :class_id)",
                            subject_name=SUBJECTS[subjectCode], subject_code=subjectCode, teacher_id=session["user_id"], class_id=classRow["id"])
-                flash(f"{SUBJECTS[subjectCode]} subject asigned to {className}", "success")
+                flash(
+                    f"{SUBJECTS[subjectCode]} subject asigned to {className}", "success")
                 return redirect("/bsubjects")
 
 
@@ -293,7 +301,8 @@ def offer_bsubjects():
         subject_code = ""
         for asignedClassSubjectRow in asignedClassSubjectRows:
             if asignedClassSubjectRow["subject_name"] == subjectName and asignedClassSubjectRow["class_id"] == int(classID):
-                classCode = asign_classcode(asignedClassSubjectRow["class_name"])
+                classCode = asign_classcode(
+                    asignedClassSubjectRow["class_name"])
                 bsubjectId += asignedClassSubjectRow["id"]
                 subject_code += asignedClassSubjectRow["subject_code"]
                 break
@@ -386,7 +395,8 @@ def uploadimg(reg_num):
                 # Ensuring the filename itself isn't dangerous
                 filename = secure_filename(image.filename)
                 # Ensure student exist
-                student = db.execute("SELECT * FROM students WHERE reg_num = :reg_num", reg_num=reg_num)
+                student = db.execute(
+                    "SELECT * FROM students WHERE reg_num = :reg_num", reg_num=reg_num)
                 if len(student) == 0:
                     flash("Registration number no match", "danger")
                     return redirect("/studentdetails")
@@ -418,10 +428,12 @@ def studentdetails():
 
         className = request.form.get("classname")
         schoolSession = request.form.get("sch_session")
-        admsnDate = datetime.strptime(request.form.get("admsn_date"), "%Y-%m-%d")
+        admsnDate = datetime.strptime(
+            request.form.get("admsn_date"), "%Y-%m-%d")
         st_email = request.form.get("st_email").strip()
         # In format yyyy-mm-dd
-        date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d")
+        date_of_birth = datetime.strptime(
+            request.form.get("date_of_birth"), "%Y-%m-%d")
         gender = request.form.get("gender").capitalize().strip()
         religion = request.form.get("religion").capitalize().strip()
         affiliation = "student"
@@ -469,12 +481,14 @@ def studentdetails():
             flash("Couldn't asign registration number", "danger")
             return render_template("studentdetails.html")
 
-        classRow = db.execute("SELECT * FROM classes WHERE class_name = :class_name", class_name=className)[0]
+        classRow = db.execute(
+            "SELECT * FROM classes WHERE class_name = :class_name", class_name=className)[0]
         # Check that student is registered and asigned to class not more than ones
         detailsRow = db.execute("SELECT surname, othername FROM people JOIN students ON  people.id = students.person_id JOIN classes ON students.class_id = classes.id JOIN teachers ON classes.id = teachers.class_id JOIN class_details ON class_details.currentclass_id = classes.id WHERE teachers.userid = :userid AND classes.id = :id AND currentclass_id = :currentclass_id AND people.surname = :surname AND people.othername = :othername AND cl_session = :cl_session",
                                 userid=session['user_id'], id=classRow['id'], currentclass_id=classRow['id'], surname=surname, othername=othername, cl_session=schoolSession)
         if len(detailsRow) != 0:
-            flash({detailsRow[0]['surname']} + " " + detailsRow[0]['othername'] + " registered already ", "danger")
+            flash({detailsRow[0]['surname']} + " " + detailsRow[0]
+                  ['othername'] + " registered already ", "danger")
             return render_template("studentdetails.html")
 
         # Register and asign class to student
@@ -552,7 +566,8 @@ def login():
             return render_template("login.html")
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        rows = db.execute("SELECT * FROM users WHERE username = ?",
+                          request.form.get("username"))
         # Ensure username exists:
         if len(rows) != 1:
             # missing.append("username and/or password not correct")
@@ -631,7 +646,8 @@ def signup():
             return render_template("signup.html")
         # Hash the password and insert the new user into users database table
         hash = generate_password_hash(password)
-        primary_key = db.execute("INSERT INTO users (username, password_hash) VALUES(?, ?)", username, hash)
+        primary_key = db.execute(
+            "INSERT INTO users (username, password_hash) VALUES(?, ?)", username, hash)
         # Login the newly registered user and remember which user has logged in
         session["user_id"] = primary_key
         flash("signed up!", "success")
@@ -650,4 +666,3 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-
